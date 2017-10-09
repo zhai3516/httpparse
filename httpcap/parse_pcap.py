@@ -68,7 +68,7 @@ def run_parser(produce_packet):
         if not (_filter.by_port(tcp_pac.source_port) or _filter.by_port(tcp_pac.dest_port)):
             continue
 
-        key = tcp_pac.gen_key()
+        key = tcp_pac.gen_key() # key: 'ip:port-ip:port'
         # we already have this conn
         if key in conn_dict:
             conn_dict[key].on_packet(tcp_pac)

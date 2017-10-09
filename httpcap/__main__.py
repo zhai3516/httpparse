@@ -25,7 +25,7 @@ signal.signal(signal.SIGINT, signal_handler)
 
 def parse_pcap():
     try:
-        do_parse("file")
+        do_parse("file") 
     finally:
         cleanups.cleanup()
 
@@ -74,6 +74,7 @@ def do_parse(source):
     _filter.method = args.method
     _filter.keyword = args.keyword
 
+    # filter_exp: 'host x.x.x.x and tcp port xxx'
     filter_exp = 'tcp'
     if args.port:
         filter_exp += " port " + str(args.port)
@@ -121,10 +122,10 @@ def do_parse(source):
                     infile.close()
         elif source == 'device':
             device = args.device
-            if not device:
+            if not device: # check device
                 print("device name empty", file=sys.stderr)
                 sys.exit(-1)
-            if not live_cap.has_pcap():
+            if not live_cap.has_pcap(): # check pcap
                 print("Libpcap not found, install it first", file=sys.stderr)
             print("Capture device: {}, filter: {}".format(device, filter_exp), file=sys.stderr)
             producer = live_cap.libpcap_produce(device=device, filter_exp=filter_exp)

@@ -9,10 +9,12 @@ _cleaned = False
 
 
 def register(function):
+    ''' register cleanup funcs '''
     _cleanup_functions.append(function)
 
 
 def cleanup():
+    ''' acquire lock and do cleanup funcs '''
     global _cleaned
     _lock.acquire()
     try:

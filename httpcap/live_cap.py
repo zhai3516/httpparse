@@ -13,6 +13,7 @@ from pcappy_port import open_offline, open_live, findalldevs
 
 
 def has_pcap():
+    '''check if install pcap lib'''
     if sys.platform == 'win32':
         libpcap = cdll.LoadLibrary(find_library('wpcap.dll'))
     else:
@@ -68,7 +69,7 @@ def libpcap_produce(device=None, filename=None, filter_exp=''):
     # and does not support promiscuous mode
     if device == 'any' and not sys.platform.startswith('linux'):
         devices = [d.name for d in findalldevs()]
-        for _device in devices:
+        for _device in devices: # each thread only match one device
             t = threading.Thread(target=task, name="pcap-thread",
                                  args=(q, _device, filename, filter_exp))
             t.setDaemon(True)
@@ -93,7 +94,7 @@ def libpcap_produce(device=None, filename=None, filter_exp=''):
 
 
 def task(q, device, filename, filter_exp):
-    # Producer
+    # Producer:  produce link frame <type, header, data>
     def convert(link_type, header, data):
         sec = header['ts']['tv_sec']
         # Todo usec = header['ts']['tv_usec'] produce negetive value
